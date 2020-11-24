@@ -28,7 +28,12 @@ LIBRARY_HOME = 'library'
 FOLDER_NAME_MOVIES = 'movies'
 FOLDER_NAME_SHOWS = 'shows'
 ILLEGAL_CHARACTERS = '[<|>|"|?|$|!|:|#|*]'
-
+if g.ADDON.getSettingBool('enableprofilefolder'):
+    active_guide_profile = g.LOCAL_DB.get_active_profile_guid()
+    PROFILE_NAME = g.LOCAL_DB.get_profile_config('profileName', '', guid=active_guid_profile)
+    LIBRARY_HOME = '{0}/{1}'.format(LIBRARY_HOME, PROFILE_NAME)
+    FOLDER_NAME_MOVIES = '{0}/{1}'.format(FOLDER_NAME_MOVIES, PROFILE_NAME)
+    FOLDER_NAME_SHOWS = '{0}/{1}'.format(FOLDER_NAME_SHOWS, PROFILE_NAME)
 
 def get_library_path():
     """Return the full path to the library"""
