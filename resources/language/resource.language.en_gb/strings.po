@@ -1070,7 +1070,11 @@ msgctxt "#30413"
 msgid "By genre/subgenre ID"
 msgstr ""
 
-# Unused 30414 to 30499
+# Unused 30414 to 30498
+
+msgctxt "#30499"
+msgid "Add profile to library export path"
+msgstr ""
 
 msgctxt "#30500"
 msgid "Prefer the audio/subtitle language with country code (if available)"
