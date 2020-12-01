@@ -13,16 +13,18 @@ import time
 from datetime import datetime, timedelta
 from future.utils import raise_from
 
-import resources.lib.utils.website as website
+import xbmc
+
 import resources.lib.common as common
+import resources.lib.utils.website as website
+from resources.lib.common import cache_utils
 from resources.lib.common.exceptions import (NotLoggedInError, MissingCredentialsError, WebsiteParsingError,
                                              MbrStatusAnonymousError, MetadataNotAvailable, LoginValidateError,
                                              HttpError401, InvalidProfilesError)
-from resources.lib.common import cache_utils
-from resources.lib.utils import cookies
 from resources.lib.globals import G
 from resources.lib.kodi import ui
 from resources.lib.services.nfsession.session.path_requests import SessionPathRequests
+from resources.lib.utils import cookies
 from resources.lib.utils.logging import LOG, measure_exec_time_decorator
 
 
@@ -92,6 +94,10 @@ class NFSessionOperations(SessionPathRequests):
     def activate_profile(self, guid):
         """Set the profile identified by guid as active"""
         LOG.debug('Switching to profile {}', guid)
+        if xbmc.Player().isPlayingVideo():
+            # Change the current profile while a video is playing can cause problems with outgoing HTTP requests
+            # (MSL/NFSession) causing a failure in the HTTP request or sending data on the wrong profile
+            raise Warning('It is not possible select a profile while a video is playing.')
         current_active_guid = G.LOCAL_DB.get_active_profile_guid()
         if guid == current_active_guid:
             LOG.info('The profile guid {} is already set, activation not needed.', guid)
