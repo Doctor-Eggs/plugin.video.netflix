@@ -52,6 +52,11 @@ class Directory(object):
         if self.perpetual_range_start == '0':
             # For cache identifier purpose
             self.perpetual_range_start = None
+        if 'switch_profile_guid' in params:
+            guid_passed = self.params.get('guid')
+            guid_active = G.LOCAL_DB.get_active_profile_guid()
+            if guid_passed != '' and guid_passed != guid_active:
+                activate_profile(params['switch_profile_guid'])
 
     def root(self, pathitems=None):  # pylint: disable=unused-argument
         """Show profiles or home listing when profile auto-selection is enabled"""
